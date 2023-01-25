@@ -6,6 +6,7 @@ const webpack = require("webpack-stream");
 const browsersync = require("browser-sync");
 
 const dist = "./dist/";
+// const dist = "/Applications/MAMP/htdocs/Window";
 
 // отслеживание изменений
 gulp.task("copy-html", () => {

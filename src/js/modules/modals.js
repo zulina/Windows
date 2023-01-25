@@ -47,8 +47,9 @@ const modals = () => {
     bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
     // при нажатии на Заказать обратный звонок
     bindModal('.phone_link', '.popup', '.popup .popup_close');
+    //showModalByTime('.popup', 60000);
 
-    showModalByTime('.popup', 60000);
+    bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
 };
 
 export default modals;
