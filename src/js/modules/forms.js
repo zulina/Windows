@@ -1,14 +1,12 @@
-const forms = () => {
+import checkNumInputs from './checkNumInputs';
+
+// модуль для работы со всеми формами
+const forms = (state) => {
     const form = document.querySelectorAll('form'),
-        inputs = document.querySelectorAll('input'),
-        phoneInputs = document.querySelectorAll('input[name="user_phone"]');
+        inputs = document.querySelectorAll('input');
 
     // при вводе номера убираем всё что не цифры
-    phoneInputs.forEach(item => {
-        item.addEventListener('input', () => {
-            item.value = item.value.replace(/\D/, '');
-        });
-    });
+    checkNumInputs('input[name="user_phone"]');
 
     const message = {
         loading: 'Загрузка...',
@@ -45,6 +43,15 @@ const forms = () => {
             item.appendChild(statusMessage);
 
             const formData = new FormData(item);
+
+            // если у формы есть этот атрибут со значением 'end'
+            if (item.getAttribute('data-calc') === "end") {
+                // добавляем все выбранные данные в калькуляторе к данным формы
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
+            
             postData('assets/server.php', formData)
                 .then(res => {
                     console.log(res);
