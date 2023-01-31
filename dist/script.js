@@ -1582,6 +1582,25 @@ module.exports = function (object, names) {
 
 /***/ }),
 
+/***/ "./node_modules/core-js/internals/object-keys.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/core-js/internals/object-keys.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var internalObjectKeys = __webpack_require__(/*! ../internals/object-keys-internal */ "./node_modules/core-js/internals/object-keys-internal.js");
+var enumBugKeys = __webpack_require__(/*! ../internals/enum-bug-keys */ "./node_modules/core-js/internals/enum-bug-keys.js");
+
+// `Object.keys` method
+// https://tc39.github.io/ecma262/#sec-object.keys
+module.exports = Object.keys || function keys(O) {
+  return internalObjectKeys(O, enumBugKeys);
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/core-js/internals/object-property-is-enumerable.js":
 /*!*************************************************************************!*\
   !*** ./node_modules/core-js/internals/object-property-is-enumerable.js ***!
@@ -2488,6 +2507,31 @@ module.exports = function (name) {
     else WellKnownSymbolsStore[name] = createWellKnownSymbol('Symbol.' + name);
   } return WellKnownSymbolsStore[name];
 };
+
+
+/***/ }),
+
+/***/ "./node_modules/core-js/modules/es.object.keys.js":
+/*!********************************************************!*\
+  !*** ./node_modules/core-js/modules/es.object.keys.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var $ = __webpack_require__(/*! ../internals/export */ "./node_modules/core-js/internals/export.js");
+var toObject = __webpack_require__(/*! ../internals/to-object */ "./node_modules/core-js/internals/to-object.js");
+var nativeKeys = __webpack_require__(/*! ../internals/object-keys */ "./node_modules/core-js/internals/object-keys.js");
+var fails = __webpack_require__(/*! ../internals/fails */ "./node_modules/core-js/internals/fails.js");
+
+var FAILS_ON_PRIMITIVES = fails(function () { nativeKeys(1); });
+
+// `Object.keys` method
+// https://tc39.github.io/ecma262/#sec-object.keys
+$({ target: 'Object', stat: true, forced: FAILS_ON_PRIMITIVES }, {
+  keys: function keys(it) {
+    return nativeKeys(toObject(it));
+  }
+});
 
 
 /***/ }),
@@ -17924,17 +17968,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
  // скрипты будут выполняться только когда дом-структура будет готова
 
 window.addEventListener('DOMContentLoaded', function () {
   "use strict"; // объект для хранения выбранных данных в калькуляторе
 
-  var modalState = {};
-  Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
-  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
-  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
-  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
-  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
+  var modalState = {}; // устанавливаем значения по-умолчанию для калькулятора
+
+  Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["setDefaultValuesOfCalc"])(); // запись данных в объект
+
+  Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState); // поведение модальных окон
+
+  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])(modalState); // переключение по табам Остекленение
+
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active'); // переключение по табам Отделка
+
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click'); // переключение по табам Формы балкона в калькуляторе
+
+  Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block'); // обработка введенных данных на формах
+
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
 });
 
@@ -17944,14 +17997,19 @@ window.addEventListener('DOMContentLoaded', function () {
 /*!********************************************!*\
   !*** ./src/js/modules/changeModalState.js ***!
   \********************************************/
-/*! exports provided: default */
+/*! exports provided: setPropOfModalState, deletePropOfModalState, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
-/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setPropOfModalState", function() { return setPropOfModalState; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deletePropOfModalState", function() { return deletePropOfModalState; });
+/* harmony import */ var core_js_modules_es_object_keys__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.object.keys */ "./node_modules/core-js/modules/es.object.keys.js");
+/* harmony import */ var core_js_modules_es_object_keys__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_keys__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
+/* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+
 
 
 
@@ -17962,49 +18020,17 @@ var changeModalState = function changeModalState(state) {
       windowHeight = document.querySelectorAll('#height'),
       windowType = document.querySelectorAll('#view_type'),
       windowProfile = document.querySelectorAll('.checkbox');
-  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#width');
-  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_1__["default"])('#height'); // записываем в объект выбранные значения на формах
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_2__["default"])('#width');
+  Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_2__["default"])('#height'); // записываем в объект выбранные значения на формах
 
   function bindActionToElems(event, elem, prop) {
     elem.forEach(function (item, i) {
       item.addEventListener(event, function () {
-        switch (item.nodeName) {
-          case 'SPAN':
-            state[prop] = i;
-            break;
-
-          case 'INPUT':
-            if (item.getAttribute('type') === 'checkbox') {
-              i === 0 ? state[prop] = "Холодное" : state[prop] = "Теплое"; // устанавливаем галочку только на выбранном
-
-              elem.forEach(function (box, j) {
-                box.checked = false;
-
-                if (i == j) {
-                  box.checked = true;
-                }
-              });
-            } else {
-              state[prop] = item.value;
-            }
-
-            break;
-
-          case 'SELECT':
-            state[prop] = item.value;
-            break;
-        }
-
-        ; // if (elem.length > 1) {
-        //     state[prop] = i;
-        // } else {
-        //     state[prop] = item.value;
-        // }
-
-        console.log(state);
+        setPropOfModalState(state, prop, item, i, elem);
       });
     });
-  }
+  } // при нажатии на элементы в калькуляторе
+
 
   bindActionToElems('click', windowForm, 'form');
   bindActionToElems('input', windowWidth, 'width');
@@ -18013,6 +18039,64 @@ var changeModalState = function changeModalState(state) {
   bindActionToElems('change', windowProfile, 'profile');
 };
 
+var setPropOfModalState = function setPropOfModalState(state, prop, item) {
+  var i = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
+  var elem = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+
+  // устанавливаем значения объекта
+  switch (item.nodeName) {
+    case 'SPAN':
+      state[prop] = i;
+      break;
+
+    case 'INPUT':
+      if (item.getAttribute('type') === 'checkbox') {
+        i === 0 ? state[prop] = "Холодное" : state[prop] = "Теплое"; // устанавливаем галочку только на выбранном
+
+        if (elem) {
+          elem.forEach(function (box, j) {
+            box.checked = false;
+
+            if (i == j) {
+              box.checked = true;
+            }
+          });
+        }
+      } else {
+        state[prop] = item.value;
+      }
+
+      break;
+
+    case 'SELECT':
+      state[prop] = item.value;
+      break;
+  }
+
+  ; // устанавливаем доступность кнопки Далее
+
+  if (Object.keys(state).length < 3) {
+    document.querySelector('.popup_calc_button').setAttribute('disabled', 'true');
+  } else if (Object.keys(state).length === 3) {
+    document.querySelector('.popup_calc_button').removeAttribute('disabled');
+  } else if (Object.keys(state).length < 5) {
+    document.querySelector('.popup_calc_profile_button').setAttribute('disabled', 'true');
+  } else if (Object.keys(state).length === 5) {
+    document.querySelector('.popup_calc_profile_button').removeAttribute('disabled');
+  } // if (elem.length > 1) {
+  //     state[prop] = i;
+  // } else {
+  //     state[prop] = item.value;
+  // }
+
+
+  console.log(state);
+};
+var deletePropOfModalState = function deletePropOfModalState(state) {
+  Object.keys(state).forEach(function (key) {
+    delete state[key];
+  });
+};
 /* harmony default export */ __webpack_exports__["default"] = (changeModalState);
 
 /***/ }),
@@ -18052,11 +18136,13 @@ var checkNumInputs = function checkNumInputs(selector) {
 /*!*********************************!*\
   !*** ./src/js/modules/forms.js ***!
   \*********************************/
-/*! exports provided: default */
+/*! exports provided: setDefaultValuesOfCalc, clearInputs, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDefaultValuesOfCalc", function() { return setDefaultValuesOfCalc; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clearInputs", function() { return clearInputs; });
 /* harmony import */ var core_js_modules_es_object_to_string__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.object.to-string */ "./node_modules/core-js/modules/es.object.to-string.js");
 /* harmony import */ var core_js_modules_es_object_to_string__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_object_to_string__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es_promise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/es.promise */ "./node_modules/core-js/modules/es.promise.js");
@@ -18068,6 +18154,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! regenerator-runtime/runtime */ "./node_modules/regenerator-runtime/runtime.js");
 /* harmony import */ var regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(regenerator_runtime_runtime__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _checkNumInputs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./checkNumInputs */ "./src/js/modules/checkNumInputs.js");
+/* harmony import */ var _tabs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./tabs */ "./src/js/modules/tabs.js");
+/* harmony import */ var _changeModalState__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./changeModalState */ "./src/js/modules/changeModalState.js");
+
+
 
 
 
@@ -18076,15 +18166,14 @@ __webpack_require__.r(__webpack_exports__);
  // модуль для работы со всеми формами
 
 var forms = function forms(state) {
-  var form = document.querySelectorAll('form'),
-      inputs = document.querySelectorAll('input'); // при вводе номера убираем всё что не цифры
+  var form = document.querySelectorAll('form'); // при вводе номера убираем всё что не цифры
 
   Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_5__["default"])('input[name="user_phone"]');
   var message = {
     loading: 'Загрузка...',
     success: 'Спасибо! Скоро мы с вами свяжемся',
     failure: 'Что-то пошло не так...'
-  };
+  }; // при отправке данных
 
   var postData = function postData(url, data) {
     var res;
@@ -18115,14 +18204,8 @@ var forms = function forms(state) {
         }
       }
     });
-  };
+  }; // при нажатии отправки
 
-  var clearInputs = function clearInputs() {
-    inputs.forEach(function (item) {
-      // у элемента с тегом input есть свойство value
-      item.value = '';
-    });
-  };
 
   form.forEach(function (item) {
     item.addEventListener('submit', function (e) {
@@ -18131,14 +18214,15 @@ var forms = function forms(state) {
       var statusMessage = document.createElement('div');
       statusMessage.classList.add('status');
       item.appendChild(statusMessage);
-      var formData = new FormData(item); // если у формы есть этот атрибут со значением 'end'
+      var formData = new FormData(item); // если это последняя форма калькулятора
 
       if (item.getAttribute('data-calc') === "end") {
         // добавляем все выбранные данные в калькуляторе к данным формы
         for (var key in state) {
           formData.append(key, state[key]);
         }
-      }
+      } // отправляем данные на сервер
+
 
       postData('assets/server.php', formData).then(function (res) {
         console.log(res);
@@ -18155,6 +18239,27 @@ var forms = function forms(state) {
   });
 };
 
+var setDefaultValuesOfCalc = function setDefaultValuesOfCalc() {
+  Object(_tabs__WEBPACK_IMPORTED_MODULE_6__["setDefaultTab"])('.balcon_icons_img', 'do_image_more');
+  var windowType = document.querySelector('#view_type');
+  windowType.value = "tree"; // const windowProfile = document.querySelectorAll('.checkbox');
+  // windowProfile.forEach(item => {
+  //     item.checked = false;
+  // });
+  // windowProfile[0].checked = true;
+}; // очистка введенных данных
+
+var clearInputs = function clearInputs(state) {
+  var inputs = document.querySelectorAll('input');
+  inputs.forEach(function (item) {
+    // у элемента с тегом input есть свойство value
+    item.value = '';
+  }); // удаляем свойства в объекте
+
+  Object(_changeModalState__WEBPACK_IMPORTED_MODULE_7__["deletePropOfModalState"])(state); // устанавливаем значения по-умолчанию на формах
+
+  setDefaultValuesOfCalc();
+};
 /* harmony default export */ __webpack_exports__["default"] = (forms);
 
 /***/ }),
@@ -18170,16 +18275,20 @@ var forms = function forms(state) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./forms */ "./src/js/modules/forms.js");
+/* harmony import */ var _changeModalState__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./changeModalState */ "./src/js/modules/changeModalState.js");
 
 
-var modals = function modals() {
+
+
+var modals = function modals(state) {
   // привязка окна к определенному тригеру
   function bindModal(triggerSelector, modalSelector, closeSelector) {
     var closeClickOverlay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
     var trigger = document.querySelectorAll(triggerSelector),
         modal = document.querySelector(modalSelector),
         close = document.querySelector(closeSelector),
-        windows = document.querySelectorAll('[data-modal]'); // при открытии модального окна
+        windows = document.querySelectorAll('[data-modal]'); // при нажатии на триггер - открываем модальное окно
 
     trigger.forEach(function (item) {
       item.addEventListener('click', function (e) {
@@ -18195,14 +18304,25 @@ var modals = function modals() {
         modal.style.display = "block"; // убираем прокрутку страницы
 
         document.body.style.overflow = "hidden"; // document.body.classList.add('modal-open');
+        // добавляем в объект значения по-умолчанию
+
+        if (modalSelector === '.popup_calc') {
+          var windowForm = document.querySelector('.balcon_icons_img');
+          Object(_changeModalState__WEBPACK_IMPORTED_MODULE_2__["setPropOfModalState"])(state, 'form', windowForm);
+        } else if (modalSelector === '.popup_calc_profile') {
+          var windowType = document.querySelector('#view_type');
+          Object(_changeModalState__WEBPACK_IMPORTED_MODULE_2__["setPropOfModalState"])(state, 'type', windowType); // const windowProfile = document.querySelector('.checkbox');
+          // setPropOfModalState(state, 'profile', windowProfile);
+        }
       });
-    }); // при закрытии модального окна
+    }); // при закрытии модального окна крестиком
 
     close.addEventListener('click', function () {
       // закрываем все открытые окна
       windows.forEach(function (item) {
         item.style.display = 'none';
       });
+      Object(_forms__WEBPACK_IMPORTED_MODULE_1__["clearInputs"])(state);
       modal.style.display = "none";
       document.body.style.overflow = ""; // document.body.classList.remove('modal-open');
     }); // при нажатии на подложку
@@ -18213,11 +18333,13 @@ var modals = function modals() {
         windows.forEach(function (item) {
           item.style.display = 'none';
         });
+        Object(_forms__WEBPACK_IMPORTED_MODULE_1__["clearInputs"])(state);
         modal.style.display = "none";
         document.body.style.overflow = ""; // document.body.classList.remove('modal-open');
       }
     });
-  }
+  } // открытие формы через время
+
 
   function showModalByTime(selector, time) {
     setTimeout(function () {
@@ -18230,10 +18352,12 @@ var modals = function modals() {
   bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close'); // при нажатии на Заказать обратный звонок
 
   bindModal('.phone_link', '.popup', '.popup .popup_close'); //showModalByTime('.popup', 60000);
-  // модальные окна калькулятора
+  // при нажатии на Рассчитать стоимость
 
-  bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close');
-  bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false);
+  bindModal('.popup_calc_btn', '.popup_calc', '.popup_calc_close'); // при нажатии на Далее
+
+  bindModal('.popup_calc_button', '.popup_calc_profile', '.popup_calc_profile_close', false); // при нажатии на Далее
+
   bindModal('.popup_calc_profile_button', '.popup_calc_end', '.popup_calc_end_close', false);
 };
 
@@ -18245,11 +18369,12 @@ var modals = function modals() {
 /*!********************************!*\
   !*** ./src/js/modules/tabs.js ***!
   \********************************/
-/*! exports provided: default */
+/*! exports provided: setDefaultTab, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setDefaultTab", function() { return setDefaultTab; });
 /* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.string.replace */ "./node_modules/core-js/modules/es.string.replace.js");
 /* harmony import */ var core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_string_replace__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! core-js/modules/web.dom-collections.for-each */ "./node_modules/core-js/modules/web.dom-collections.for-each.js");
@@ -18298,6 +18423,14 @@ var tabs = function tabs(headerSelector, tabSelector, contentSelector, activeCla
   });
 };
 
+var setDefaultTab = function setDefaultTab(tabSelector, activeClass) {
+  var tab = document.querySelectorAll(tabSelector); // убираем активность на табах
+
+  tab.forEach(function (item) {
+    item.classList.remove(activeClass);
+  });
+  tab[0].classList.add(activeClass);
+};
 /* harmony default export */ __webpack_exports__["default"] = (tabs);
 
 /***/ }),

@@ -1818,3 +1818,9 @@ textarea:focus {
     animation: none !important;
   }
 }
+
+.popup_calc_button:disabled,
+.popup_calc_profile_button:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}

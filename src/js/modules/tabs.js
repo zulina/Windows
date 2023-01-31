@@ -40,4 +40,15 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display
     });
 }
 
+export const setDefaultTab = (tabSelector, activeClass) => {
+    const tab = document.querySelectorAll(tabSelector);
+
+    // убираем активность на табах
+    tab.forEach(item => {
+        item.classList.remove(activeClass);
+    });
+
+    tab[0].classList.add(activeClass);
+}
+
 export default tabs;
