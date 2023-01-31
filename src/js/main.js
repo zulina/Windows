@@ -4,6 +4,7 @@ import tabs from "./modules/tabs";
 import forms from './modules/forms';
 import changeModalState from "./modules/changeModalState";
 import { setDefaultValuesOfCalc } from "./modules/forms";
+import timer from "./modules/timer";
 
 // скрипты будут выполняться только когда дом-структура будет готова
 window.addEventListener('DOMContentLoaded', () => {
@@ -16,6 +17,8 @@ window.addEventListener('DOMContentLoaded', () => {
     // запись данных в объект
     changeModalState(modalState);
 
+    let deadline = '2023-02-14';
+
     // поведение модальных окон
     modals(modalState);
     // переключение по табам Остекленение
@@ -26,4 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
     tabs('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
     // обработка введенных данных на формах
     forms(modalState);
+    // установка таймера для акции
+    timer('.container1', deadline);
 });
