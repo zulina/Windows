@@ -5,6 +5,7 @@ import forms from './modules/forms';
 import changeModalState from "./modules/changeModalState";
 import { setDefaultValuesOfCalc } from "./modules/forms";
 import timer from "./modules/timer";
+import images from "./modules/images";
 
 // скрипты будут выполняться только когда дом-структура будет готова
 window.addEventListener('DOMContentLoaded', () => {
@@ -31,4 +32,5 @@ window.addEventListener('DOMContentLoaded', () => {
     forms(modalState);
     // установка таймера для акции
     timer('.container1', deadline);
+    images();
 });
