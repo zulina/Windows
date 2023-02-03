@@ -36,15 +36,21 @@ export const setPropOfModalState = (state, prop, item, i=0, elem=false) => {
             break;
         case 'INPUT' :
             if (item.getAttribute('type') === 'checkbox') {
-                i === 0 ? state[prop] = "Холодное" : state[prop] = "Теплое";
-                // устанавливаем галочку только на выбранном
-                if (elem) {
-                    elem.forEach((box, j) => {
-                        box.checked = false;
-                        if (i == j) {
-                            box.checked = true;
+                switch(i) {
+                    case 0:
+                        state[prop] = "Холодное";
+                        if (elem) {
+                            elem[0].checked = true;
+                            elem[1].checked = false;
                         }
-                    });
+                        break;
+                    case 1:
+                        state[prop] = "Теплое";
+                        if (elem) {
+                            elem[1].checked = true;
+                            elem[0].checked = false;
+                        }
+                        break;
                 }
             } else {
                 state[prop] = item.value;

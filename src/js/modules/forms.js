@@ -1,5 +1,4 @@
 import checkNumInputs from './checkNumInputs';
-import { setDefaultTab } from './tabs';
 import { deletePropOfModalState } from './changeModalState';
 
 // модуль для работы со всеми формами
@@ -65,17 +64,39 @@ const forms = (state) => {
     });
 };
 
-export const setDefaultValuesOfCalc = () => {
-    setDefaultTab('.balcon_icons_img', 'do_image_more');
+// устанавливаем форму балкона по-умолчанию в калькуляторе
+export const setWindowForm = (tabSelector, activeClass) => {
+    const tab = document.querySelectorAll(tabSelector);
 
+    // убираем активность на табах
+    tab.forEach(item => {
+        item.classList.remove(activeClass);
+    });
+
+    tab[0].classList.add(activeClass);
+};
+
+export const setWindowType = (windowTypeValue) => {
     const windowType = document.querySelector('#view_type');
-    windowType.value = "tree";
-    
-    // const windowProfile = document.querySelectorAll('.checkbox');
-    // windowProfile.forEach(item => {
-    //     item.checked = false;
-    // });
-    // windowProfile[0].checked = true;
+    windowType.value = windowTypeValue;
+};
+
+export const setWindowProfile = (windowProfileValue) => {
+    const windowProfile = document.querySelectorAll('.checkbox');
+    switch(windowProfileValue) {
+        case "cold":
+            windowProfile[0].checked = true;
+            windowProfile[1].checked = false;
+            break;
+        case "warm":
+            windowProfile[0].checked = false;
+            windowProfile[1].checked = true;
+            break;
+        case "":
+            windowProfile[0].checked = false;
+            windowProfile[1].checked = false;
+            break;
+    }
 };
 
 // очистка введенных данных
@@ -87,8 +108,6 @@ export const clearInputs = (state) => {
     });
     // удаляем свойства в объекте
     deletePropOfModalState(state);
-    // устанавливаем значения по-умолчанию на формах
-    setDefaultValuesOfCalc();
 };
 
 export default forms;

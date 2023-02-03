@@ -486,7 +486,7 @@ textarea:focus {
   display: none;
 }
 
-.glazing a.active {
+.glazing .active a {
   text-decoration: none;
   color: #454545;
 }
@@ -1819,8 +1819,23 @@ textarea:focus {
   }
 }
 
+/* добавленные */
 .popup_calc_button:disabled,
 .popup_calc_profile_button:disabled {
   cursor: not-allowed;
   opacity: 0.3;
+}
+
+.faded {
+  animation-name: faded;
+  animation-duration: 1.5s;
+}
+
+@keyframes faded {
+  from {
+    opacity: 0.1;
+  }
+  to {
+    opacity: 1.0;
+  }
 }

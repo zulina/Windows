@@ -1,3 +1,5 @@
+import { setWindowType } from "./forms";
+
 const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display = 'block') => {
     const header = document.querySelector(headerSelector),
         tab = document.querySelectorAll(tabSelector),
@@ -34,21 +36,31 @@ const tabs = (headerSelector, tabSelector, contentSelector, activeClass, display
                 if (target == item || target.parentNode == item) {
                     hideTabContent();
                     showTabContent(i);
+
+                    // установка значения типа окна для калькулятора
+                    if (tabSelector === '.glazing_block') {
+                        switch(i) {
+                            case 0:
+                                setWindowType("tree");
+                                break;
+                            case 1:
+                                setWindowType("aluminum");
+                                break;
+                            case 2:
+                                setWindowType("plastic");
+                                break;
+                            case 3:
+                                setWindowType("french");
+                                break;
+                            case 4:
+                                setWindowType("overhang");
+                                break;
+                        }                        
+                    }
                 }
             });
         }
     });
-}
-
-export const setDefaultTab = (tabSelector, activeClass) => {
-    const tab = document.querySelectorAll(tabSelector);
-
-    // убираем активность на табах
-    tab.forEach(item => {
-        item.classList.remove(activeClass);
-    });
-
-    tab[0].classList.add(activeClass);
-}
+};
 
 export default tabs;

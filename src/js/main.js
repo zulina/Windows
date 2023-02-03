@@ -3,7 +3,6 @@ import modals from "./modules/modals";
 import tabs from "./modules/tabs";
 import forms from './modules/forms';
 import changeModalState from "./modules/changeModalState";
-import { setDefaultValuesOfCalc } from "./modules/forms";
 import timer from "./modules/timer";
 import images from "./modules/images";
 
@@ -13,8 +12,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // объект для хранения выбранных данных в калькуляторе
     let modalState = {};
-    // устанавливаем значения по-умолчанию для калькулятора
-    setDefaultValuesOfCalc();
     // запись данных в объект
     changeModalState(modalState);
 
@@ -32,5 +29,6 @@ window.addEventListener('DOMContentLoaded', () => {
     forms(modalState);
     // установка таймера для акции
     timer('.container1', deadline);
+    // открытие изображений
     images();
 });

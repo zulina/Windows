@@ -1,5 +1,9 @@
 import { clearInputs } from "./forms";
+import { setWindowForm } from "./forms";
+import { setWindowProfile } from "./forms";
 import { setPropOfModalState } from './changeModalState';
+import calcScroll from "./calcScroll";
+import { modifyBody } from "./calcScroll";
 
 const modals = (state) => {
     // привязка окна к определенному тригеру
@@ -7,7 +11,8 @@ const modals = (state) => {
         const trigger = document.querySelectorAll(triggerSelector),
             modal = document.querySelector(modalSelector),
             close = document.querySelector(closeSelector),
-            windows = document.querySelectorAll('[data-modal]');
+            windows = document.querySelectorAll('[data-modal]'),
+            scroll = calcScroll();
 
         // при нажатии на триггер - открываем модальное окно
         trigger.forEach(item => {
@@ -15,6 +20,7 @@ const modals = (state) => {
                 if (e.target) {
                     e.preventDefault();
                 }
+
 
                 // закрываем все открытые окна
                 windows.forEach(item => {
@@ -24,18 +30,36 @@ const modals = (state) => {
                 // для отображения модального окна
                 modal.style.display = "block";
                 // убираем прокрутку страницы
-                document.body.style.overflow = "hidden";
+                // document.body.style.overflow = "hidden";
+                // document.body.style.marginRight = `${scroll}px`;
+                modifyBody("hidden", scroll);
                 // document.body.classList.add('modal-open');
 
-                // добавляем в объект значения по-умолчанию
+                // при открытии первой формы калькулятора
                 if (modalSelector === '.popup_calc') {
+                    // устанавливаем профиль (холодное или теплое)
+                    if (item.parentNode.parentNode.childNodes[1].classList.contains('glazing_warm')) {
+                        setWindowProfile("warm");
+                    } else {
+                        setWindowProfile("cold");
+                    }
+                    // устанавливаем форму балкона по-умолчанию
+                    setWindowForm('.balcon_icons_img', 'do_image_more');
+                    // добавляем в объект значение формы
                     const windowForm = document.querySelector('.balcon_icons_img');
                     setPropOfModalState(state, 'form', windowForm);
+                // при открытии второй формы калькулятора
                 } else if (modalSelector === '.popup_calc_profile') {
+                    // добавляем в объект значение типа
                     const windowType = document.querySelector('#view_type');
                     setPropOfModalState(state, 'type', windowType);
-                    // const windowProfile = document.querySelector('.checkbox');
-                    // setPropOfModalState(state, 'profile', windowProfile);
+                    // добавляем в объект значение профиля
+                    const windowProfile = document.querySelectorAll('.checkbox');
+                    if (windowProfile[0].checked) {
+                        setPropOfModalState(state, 'profile', windowProfile[0], 0);
+                    } else if (windowProfile[1].checked) {
+                        setPropOfModalState(state, 'profile', windowProfile[1], 1);
+                    }
                 }   
             });
         });
@@ -50,7 +74,9 @@ const modals = (state) => {
             clearInputs(state);
 
             modal.style.display = "none";
-            document.body.style.overflow = "";
+            // document.body.style.overflow = "";
+            // document.body.style.marginRight = `0px`;
+            modifyBody("", "0px");
             // document.body.classList.remove('modal-open');
         });
 
@@ -65,7 +91,9 @@ const modals = (state) => {
                 clearInputs(state);
 
                 modal.style.display = "none";
-                document.body.style.overflow = "";
+                // document.body.style.overflow = "";
+                // document.body.style.marginRight = `0px`;
+                modifyBody("", "0px");
                 // document.body.classList.remove('modal-open');
             }
         });
@@ -75,14 +103,17 @@ const modals = (state) => {
     function showModalByTime(selector, time) {
         setTimeout(function() {
             document.querySelector(selector).style.display = 'block';
-            document.body.style.overflow = "hidden";
-         }, time);
+            // document.body.style.overflow = "hidden";
+            // document.body.style.marginRight = `${calcScroll()}px`;
+            modifyBody("hidden", calcScroll());
+        }, time);
     }
 
     // при нажатии на Вызвать замерщика
     bindModal('.popup_engineer_btn', '.popup_engineer', '.popup_engineer .popup_close');
     // при нажатии на Заказать обратный звонок
     bindModal('.phone_link', '.popup', '.popup .popup_close');
+
     //showModalByTime('.popup', 60000);
 
     // при нажатии на Рассчитать стоимость
